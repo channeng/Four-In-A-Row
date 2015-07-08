@@ -4,12 +4,12 @@ import time
 colHeaders = [1,2,3,4,5,6,7]
 r0 = ["-","-","-","-","-","-","-"]
 
-r1 = [2,0,1,1,1,0,0]
-r2 = [2,2,2,2,0,1,0]
-r3 = [2,1,2,1,2,1,2]
-r4 = [2,0,0,1,1,1,1]
-r5 = [0,0,0,0,0,1,0]
-r6 = [0,0,0,0,0,0,0]
+r1 = [0,0,0,0,0,0,1]
+r2 = [0,1,0,0,0,0,2]
+r3 = [0,1,2,0,1,2,0]
+r4 = [0,0,1,2,2,0,0]
+r5 = [0,0,2,2,2,0,0]
+r6 = [0,1,1,0,1,2,0]
 board = [r1,r2,r3,r4,r5,r6]
 
 
@@ -85,6 +85,99 @@ def check_col_win(colindex,board):
 			return True
 	else: return False
 
+def row_win(board):
+	for rowindex in range(len(board)):
+		if check_row_win(rowindex,board):
+			return True
+		else: pass
+	else: return False
+
+def col_win(board):
+	for colindex in range(len(board[0])):
+		if check_col_win(colindex,board):
+			return True
+		else: pass
+	else: return False
+
+def leftrightdiagr1_win(board,dir):
+	board2 = copy.deepcopy(board)
+	i = 0
+	if dir == "left":
+		pass
+	else: 
+		for r in board2:
+			r.reverse()
+
+	for colindex in range(3):
+		if board2[i][colindex]*board2[i+1][colindex+1]*board2[i+2][colindex+2]*board2[i+3][colindex+3] == 1 or board2[i][colindex]*board2[i+1][colindex+1]*board2[i+2][colindex+2]*board2[i+3][colindex+3] == 16:
+			return True
+		else: 
+			i+=1
+	else:
+		return False
+
+def leftrightdiagr2_win(board,dir):
+	board2 = copy.deepcopy(board)
+	i = 1
+	if dir == "left":
+		pass
+	else: 
+		for r in board2:
+			r.reverse()
+
+	for colindex in range(2):
+		if board2[i][colindex]*board2[i+1][colindex+1]*board2[i+2][colindex+2]*board2[i+3][colindex+3] == 1 or board2[i][colindex]*board2[i+1][colindex+1]*board2[i+2][colindex+2]*board2[i+3][colindex+3] == 16:
+			return True
+		else: 
+			i+=1
+	else:
+		return False
+
+def leftrightdiagr3_win(board,dir):
+	board2 = copy.deepcopy(board)
+	i = 2
+	if dir == "left":
+		pass
+	else: 
+		for r in board2:
+			r.reverse()
+	
+	if board2[i][0]*board2[i+1][1]*board2[i+2][2]*board2[i+3][3] == 1 or board2[i][0]*board2[i+1][1]*board2[i+2][2]*board2[i+3][3] == 16:
+		return True
+	else: 
+		return False
+
+def leftdiagc3_win(board,dir):
+	board2 = copy.deepcopy(board)
+	i = 1
+	if dir == "left":
+		pass
+	else: 
+		for r in board2:
+			r.reverse()
+
+	for colindex in range(2):
+		if board2[i][colindex]*board2[i+1][colindex+1]*board2[i+2][colindex+2]*board2[i+3][colindex+3] == 1 or board2[i][colindex]*board2[i+1][colindex+1]*board2[i+2][colindex+2]*board2[i+3][colindex+3] == 16:
+			return True
+		else: 
+			i+=1
+	else:
+		return False
+
+def leftdiagc4_win(board,dir):
+	board2 = copy.deepcopy(board)
+	i = 2
+	if dir == "left":
+		pass
+	else: 
+		for r in board2:
+			r.reverse()
+	
+	if board2[i][0]*board2[i+1][1]*board2[i+2][2]*board2[i+3][3] == 1 or board2[i][0]*board2[i+1][1]*board2[i+2][2]*board2[i+3][3] == 16:
+		return True
+	else: 
+		return False
+
 #GAME PROGRESSION
 
 def Pturn(playerx, board):
@@ -102,5 +195,6 @@ def start_game(board):
 	print "---- GAME OVER ----"
 	print "    It's a draw!   "
 
+print leftrightdiagr1_win(board,"left")
+print leftrightdiagr1_win(board,"right")
 
-print check_col_win(5,board)
