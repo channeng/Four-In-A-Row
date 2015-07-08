@@ -1,3 +1,6 @@
+import copy
+import time
+
 colHeaders = [1,2,3,4,5,6,7]
 r0 = ["-","-","-","-","-","-","-"]
 
@@ -37,8 +40,23 @@ def checkcol(inputt,playerx,board):
 		inputt2 = raw_input("Please enter only 1/2/3/4/5/6/7 \n > ")
 		return checkcol(inputt2,playerx,board)
 
+def animateBoard(playerx,board,pcol):
+	board2 = copy.deepcopy(board)
+	for rowindex in range(len(board)):
+		if board2[rowindex][pcol] == 0:
+			if rowindex == 0:
+				pass
+			else: board2[rowindex-1][pcol] = 0
+			board2[rowindex][pcol] = playerx
+			printboard(board2)
+			print
+			print
+			time.sleep(0.12)
+		else: break
+
 def fillBoard(playerx,board):
 	pcol = checkcol(str(raw_input("Which column? (1/2/3/4/5/6/7)\n > ")),playerx,board)-1
+	animateBoard(playerx,board,pcol)
 	for r in reversed(board):
 		if r[pcol] == 0:
 			r[pcol] = playerx
@@ -64,4 +82,3 @@ def start_game(board):
 	print "    It's a draw!   "
 
 start_game(board)
-
