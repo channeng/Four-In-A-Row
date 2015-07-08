@@ -59,6 +59,13 @@ def checkcol(inputt,playerx,board):
 		inputt2 = raw_input("Please enter only 1/2/3/4/5/6/7 \n > ")
 		return checkcol(inputt2,playerx,board)
 
+def checkyn(inputt):
+	if inputt == "y" or inputt == "n":
+		return inputt
+	else:
+		inputt2 = str(raw_input("Please enter 'y' or 'n'.\n > ")).lower()
+		return checkyn(inputt2)
+
 def fillBoard(playerx,board):
 	pcol = checkcol(str(raw_input("Which column? (1/2/3/4/5/6/7)\n > ")),playerx,board)-1
 	animateBoard(playerx,board,pcol)
@@ -70,6 +77,16 @@ def fillBoard(playerx,board):
 		printboard(board)
 		print "Player "+str(playerx)+": "+"Column is filled! Please try another column!"
 		fillBoard(playerx,board)
+
+def clearboard(board):
+	r1 = [0,0,0,0,0,0,0]
+	r2 = [0,0,0,0,0,0,0]
+	r3 = [0,0,0,0,0,0,0]
+	r4 = [0,0,0,0,0,0,0]
+	r5 = [0,0,0,0,0,0,0]
+	r6 = [0,0,0,0,0,0,0]
+	board = [r1,r2,r3,r4,r5,r6]
+	return board
 
 #WIN CRITERIA
 
@@ -228,24 +245,39 @@ def Pturn(playerx, board):
 	fillBoard(playerx,board)
 	printboard(board)
 
+def replay(board):
+	inputt = str(raw_input("Do you want to play again? (y/n) \n > ")).lower()
+	answer = checkyn(inputt)
+	if answer == "y":
+		start_game(clearboard(board))
+	else:
+		print 
+		return True
+
 def start_game(board):
 	printboard(board)
 	i = 0
 	while i<21:
 		Pturn(1,board)
 		if is_win(board):
-			print "Player 1 wins!"
-			break
+			print "---- GAME OVER ----"
+			print "   Player 1 wins!  "
+			if replay(board):
+				break
 		else: pass
 		Pturn(2,board)
 		if is_win(board):
-			print "Player 2 wins!"
-			break
+			print "---- GAME OVER ----"
+			print "   Player 2 wins!  "
+			if replay(board):
+				break
 		else: pass
 		i += 1
-		if i == 20:
+		if i == 21:
+			print "---- GAME OVER ----"
 			print "    It's a draw!   "
-			break
-	print "---- GAME OVER ----"
+			if replay(board):
+				break
+	print "Thanks for playing!\n# Credits: Shannon Chan #"
 
 start_game(board)
