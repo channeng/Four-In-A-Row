@@ -258,26 +258,41 @@ def start_game(board):
 	printboard(board)
 	i = 0
 	while i<21:
+		if is_win(board):
+			break
+		
 		Pturn(1,board)
 		if is_win(board):
 			print "---- GAME OVER ----"
 			print "   Player 1 wins!  "
 			if replay(board):
+				print "Thanks for playing!\n# Credits: Shannon Chan #"
+				print
 				break
-		else: pass
+		else: 
+			pass
+
+		if is_win(board):
+			break
 		Pturn(2,board)
 		if is_win(board):
 			print "---- GAME OVER ----"
 			print "   Player 2 wins!  "
 			if replay(board):
+				print "Thanks for playing!\n# Credits: Shannon Chan #"
+				print
 				break
-		else: pass
+		else: 
+			pass
+
 		i += 1
 		if i == 21:
 			print "---- GAME OVER ----"
 			print "    It's a draw!   "
 			if replay(board):
+				print "Thanks for playing!\n# Credits: Shannon Chan #"
+				print
 				break
-	print "Thanks for playing!\n# Credits: Shannon Chan #"
+				
 
 start_game(board)
