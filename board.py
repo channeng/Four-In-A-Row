@@ -11,9 +11,9 @@ r4 = [0,0,0,0,0,0,0]
 r5 = [0,0,0,0,0,0,0]
 r6 = [0,0,0,0,0,0,0]
 board = [r1,r2,r3,r4,r5,r6]
-#test
-#test local
-#UI elements
+
+
+
 
 def printboard(board):
 	for i in range(50):
