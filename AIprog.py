@@ -2,11 +2,11 @@ import scoresys
 import copy
 
 r1 = [0,0,0,0,0,0,0]
-r2 = [0,0,0,0,0,0,0]
-r3 = [0,0,0,0,0,0,0]
-r4 = [0,0,0,0,0,0,0]
-r5 = [0,0,1,1,1,0,0]
-r6 = [2,0,1,1,1,0,2]
+r2 = [0,2,2,0,0,0,0]
+r3 = [0,0,0,0,2,0,0]
+r4 = [0,1,1,0,1,0,0]
+r5 = [0,0,0,1,0,0,0]
+r6 = [2,0,1,1,0,0,2]
 
 board = [r1,r2,r3,r4,r5,r6]
 
@@ -26,6 +26,12 @@ def get_row_result(playerx,board,rowindex):
 	result =""
 	for i in range(len(board[rowindex])):
 		result = result + str(board[rowindex][i])
+	return result
+
+def get_array_result(array):
+	result =""
+	for i in range(len(array)):
+		result = result + str(array[i])
 	return result
 
 def get_board_result(playerx,board):
@@ -75,3 +81,44 @@ def easyscore(playerx,board,rowindex):
 	row_score.append(max(extra_2_space_score))
 
 	return sum(row_score)
+
+def get_diag(board,diag_type,row_col,diagindex):   # DIAG_TYPE: LEFT=0 , RIGHT=1 |  ROW_COL: ROW=0,COL=1
+	diag = []
+	board2 = copy.deepcopy(board)
+	if diag_type == 0:
+		if row_col == 0:
+			for i in range(7-diagindex):
+				diag.append(board2[diagindex-1+i][i])
+			return diag
+		elif row_col == 1:
+			for i in range(7-diagindex):
+				diag.append(board2[i][diagindex+i])
+			return diag
+	elif diag_type == 1:
+		for i in range(len(board)):
+			board2[i] = board[i][::-1]
+		if row_col == 0:
+			for i in range(7-diagindex):
+				diag.append(board2[diagindex-1+i][i])
+			return diag
+		elif row_col == 1:
+			for i in range(7-diagindex):
+				diag.append(board2[i][diagindex+i])
+			return diag
+
+def leftdiagboard(playerx,board):
+	leftdiagboard = []
+	for i in range(3):
+		leftdiagboard.append(get_diag(read_board(playerx,board),0,1,3-i))
+	for i in range(3):
+		leftdiagboard.append(get_diag(read_board(playerx,board),0,0,i+1))
+	return leftdiagboard
+
+def rightdiagboard(playerx,board):
+	rightdiagboard = []
+	for i in range(3):
+		rightdiagboard.append(get_diag(read_board(playerx,board),1,1,3-i))
+	for i in range(3):
+		rightdiagboard.append(get_diag(read_board(playerx,board),1,0,i+1))
+	return rightdiagboard
+	
