@@ -2,11 +2,11 @@ import scoresys
 import copy
 
 r1 = [0,0,0,0,0,0,0]
-r2 = [0,2,2,0,0,0,0]
-r3 = [0,0,0,0,2,0,0]
-r4 = [0,1,1,0,1,0,0]
-r5 = [0,0,0,1,0,0,0]
-r6 = [2,0,1,1,0,0,2]
+r2 = [0,0,0,0,2,0,0]
+r3 = [0,0,0,2,1,0,0]
+r4 = [0,0,2,1,1,1,0]
+r5 = [0,1,2,2,1,2,0]
+r6 = [0,1,2,1,2,1,0]
 
 board = [r1,r2,r3,r4,r5,r6]
 
@@ -106,19 +106,76 @@ def get_diag(board,diag_type,row_col,diagindex):   # DIAG_TYPE: LEFT=0 , RIGHT=1
 				diag.append(board2[i][diagindex+i])
 			return diag
 
-def leftdiagboard(playerx,board):
+def get_diagboard(playerx,board,diag_type):
+	board2 = read_board(playerx,board)
 	leftdiagboard = []
 	for i in range(3):
-		leftdiagboard.append(get_diag(read_board(playerx,board),0,1,3-i))
-	for i in range(3):
-		leftdiagboard.append(get_diag(read_board(playerx,board),0,0,i+1))
+		leftdiagboard.append(get_diag(board2,diag_type,1,3-i))
+	for i in range(6):
+		leftdiagboard.append(get_diag(board2,diag_type,0,i+1))
 	return leftdiagboard
 
-def rightdiagboard(playerx,board):
-	rightdiagboard = []
-	for i in range(3):
-		rightdiagboard.append(get_diag(read_board(playerx,board),1,1,3-i))
-	for i in range(3):
-		rightdiagboard.append(get_diag(read_board(playerx,board),1,0,i+1))
-	return rightdiagboard
+def diagboard(playerx,board,diag_type):
+	board2 = get_diagboard(playerx,board,diag_type)
+	leftboard = get_diagboard(playerx,board,diag_type)
+
+	for i in range(4):
+		if board2[i+2][len(board2[i+2])-2] == 0 and board2[i+3][len(board2[i+3])-1] == 0:
+			leftboard[i+2][len(leftboard[i+2])-2] = "P"
+		else: pass
+	if board2[1][4] == 0 and board2[2][5] == 0:
+			leftboard[1][4] = "P" 
+	else: pass
+
+	for i in range(2):
+		x = i+3
+		for i in range(4):
+			if board2[i+2][len(board2[i+2])-x] == 0 and board2[i+3][len(board2[i+3])-(x-1)] == 0:
+				if board2[i+2][len(board2[i+2])-x] == 0 and board2[i+3][len(board2[i+3])-(x-1)] ==0 and board2[i+4][len(board2[i+4])-(x-2)] == 0:
+					leftboard[i+2][len(leftboard[i+2])-x] = "X"
+				else: 
+					leftboard[i+2][len(leftboard[i+2])-x] = "P"
+			else: pass
 	
+	for i in range(3):
+		x = 5
+		if board2[i+2][len(board2[i+2])-x] == 0 and board2[i+3][len(board2[i+3])-(x-1)] == 0:
+			if board2[i+2][len(board2[i+2])-x] == 0 and board2[i+3][len(board2[i+3])-(x-1)] ==0 and board2[i+4][len(board2[i+4])-(x-2)] == 0:
+				leftboard[i+2][len(leftboard[i+2])-x] = "X"
+			else: 
+				leftboard[i+2][len(leftboard[i+2])-x] = "P"
+		else: pass
+	
+	for i in range(2):
+		x = 6
+		if board2[i+2][len(board2[i+2])-x] == 0 and board2[i+3][len(board2[i+3])-(x-1)] == 0:
+			if board2[i+2][len(board2[i+2])-x] == 0 and board2[i+3][len(board2[i+3])-(x-1)] ==0 and board2[i+4][len(board2[i+4])-(x-2)] == 0:
+				leftboard[i+2][len(leftboard[i+2])-x] = "X"
+			else: 
+				leftboard[i+2][len(leftboard[i+2])-x] = "P"
+		else: pass
+
+	for i in range(2):
+		for x in range(4):
+			if board2[i][x] == 0 and board2[i+1][x+1] == 0:
+				if board2[i][x] == 0 and board2[i+1][x+1] ==0 and board2[i+2][x+2] == 0:
+					leftboard[i][x] = "X"
+				else: 
+					leftboard[i][x] = "P"
+			else: pass
+
+	return get_board_result(playerx,leftboard)
+
+
+	# for rowindex in range(4):
+	# 	for i in range(len(board[rowindex])):
+	# 		if board[rowindex][i] == 0 and board[rowindex+1][i] == 0:
+	# 			if board[rowindex][i] == 0 and board[rowindex+1][i] ==0 and board[rowindex+2][i] == 0:
+	# 				rowboard[rowindex][i] = "X"
+	# 			else: 
+	# 				rowboard[rowindex][i] = "P"
+	# 		else: pass
+
+for i in diagboard(1,board,0):
+	print i
+
