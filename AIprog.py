@@ -10,6 +10,8 @@ r6 = [2,1,2,1,1,1,2]
 
 board = [r1,r2,r3,r4,r5,r6]
 
+# BOARD-to-ARRAY transformation
+
 def read_board(playerx,board):
 	board2 = copy.deepcopy(board)
 	for rowindex in range(len(board)):
@@ -269,6 +271,29 @@ def allscore(playerx,board):
 	allscore =[colscore(playerx,board),rowscore(playerx,board),leftdiagscore(playerx,board),rightdiagscore(playerx,board)]
 	return sum(allscore)
 
-print allscore(1,board)
+# RUN THROUGH ALL SCENARIOS
+
+def AIprog(playerx,board):
+	table = []
+	for colindex in range(len(board[0])):
+		board2 = copy.deepcopy(board)
+		for r in reversed(board2):
+			if r[colindex] == 0:
+				r[colindex] = playerx
+				break
+		else: pass
+		table.append([colindex+1,allscore(playerx,board2)])
+	
+	scores = []
+	for i in range(len(table)):
+		scores.append(table[i][1])
+	topscore = max(scores)
+
+	best_col = 0
+	for i in range(len(table)):
+		if table[i][1]==topscore:
+			best_col += int(table[i][0])
+	return best_col
+
 
 
