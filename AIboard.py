@@ -80,8 +80,8 @@ def fillBoard(playerx,board):
 		fillBoard(playerx,board)
 
 def AIfillBoard(playerx,board):
-	time.sleep(2)
-	AIcol = AIprog.AIprog(playerx,board)
+	time.sleep(1.22)
+	AIcol = AIprog.AIprog_offdef(playerx,board)
 	print "Computer chooses column %s !" %(AIcol)
 	pcol = AIcol-1
 	animateBoard(playerx,board,pcol)

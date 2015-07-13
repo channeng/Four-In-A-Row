@@ -272,7 +272,10 @@ def allscore(playerx,board):
 
 # RUN THROUGH ALL SCENARIOS
 
-def AIprog(playerx,board):
+def opp(playerx):
+	return abs(abs(playerx -1)-1)+1
+
+def AIprog_offense(playerx,board):
 	table = []
 	for colindex in range(len(board[0])):
 		board2 = copy.deepcopy(board)
@@ -282,14 +285,11 @@ def AIprog(playerx,board):
 				break
 		else: pass
 		table.append([colindex+1,allscore(playerx,board2)])
-	print table
 
 	scores = []
 	for i in range(len(table)):
 		scores.append(table[i][1])
 	topscore = max(scores)
-	print scores
-	print topscore
 
 	best_col = 0
 	for i in range(len(table)):
@@ -298,5 +298,38 @@ def AIprog(playerx,board):
 			break
 	return best_col
 
-print AIprog(2,board)
+def AIfillBoard(playerx,board):
+	pcol = AIprog_offense(playerx,board)-1
+	for r in reversed(board):
+		if r[pcol] == 0:
+			r[pcol] = playerx
+			break
+	else: pass
+
+def AIprog_offdef(playerx,board):
+	table = []
+	for colindex in range(len(board[0])):
+		board2 = copy.deepcopy(board)
+		for r in reversed(board2):
+			if r[colindex] == 0:
+				r[colindex] = playerx
+				break
+		else: pass
+		board3 = copy.deepcopy(board2)
+		AIfillBoard(opp(playerx),board3)
+		table.append([colindex+1,allscore(playerx,board2)-allscore(opp(playerx),board3)])
+
+	scores = []
+	for i in range(len(table)):
+		scores.append(table[i][1])
+	topscore = max(scores)
+
+	best_col = 0
+	for i in range(len(table)):
+		if table[i][1]==topscore:
+			best_col += int(table[i][0])
+			break
+	return best_col
+
+
 
