@@ -1,5 +1,6 @@
 import copy
 import time
+import AIprog
 
 colHeaders = [1,2,3,4,5,6,7]
 r0 = ["-","-","-","-","-","-","-"]
@@ -77,6 +78,18 @@ def fillBoard(playerx,board):
 		printboard(board)
 		print "Player "+str(playerx)+": "+"Column is filled! Please try another column!"
 		fillBoard(playerx,board)
+
+def AIfillBoard(playerx,board):
+	time.sleep(2)
+	AIcol = AIprog.AIprog(playerx,board)
+	print "Computer chooses column %s !" %(AIcol)
+	pcol = AIcol-1
+	animateBoard(playerx,board,pcol)
+	for r in reversed(board):
+		if r[pcol] == 0:
+			r[pcol] = playerx
+			break
+	else: pass
 
 def clearboard(board):
 	r1 = [0,0,0,0,0,0,0]
@@ -245,6 +258,11 @@ def Pturn(playerx, board):
 	fillBoard(playerx,board)
 	printboard(board)
 
+def AIturn(playerx, board):
+	print "Computer's turn"
+	AIfillBoard(playerx,board)
+	printboard(board)
+
 def replay(board):
 	inputt = str(raw_input("Do you want to play again? (y/n) \n > ")).lower()
 	answer = checkyn(inputt)
@@ -257,42 +275,85 @@ def replay(board):
 def start_game(board):
 	printboard(board)
 	i = 0
-	while i<21:
-		if is_win(board):
-			break
-		
-		Pturn(1,board)
-		if is_win(board):
-			print "---- GAME OVER ----"
-			print "   Player 1 wins!  "
-			if replay(board):
-				print "Thanks for playing!\n# Credits: Shannon Chan #"
-				print
+	who_first = checkyn(raw_input("Would you like to begin first? (y/n)"))
+	
+	if who_first == "y":
+		while i<21:
+			if is_win(board):
 				break
-		else: 
-			pass
+			
+			Pturn(1,board)
+			if is_win(board):
+				print "---- GAME OVER ----"
+				print "   You win!  "
+				if replay(board):
+					print "Thanks for playing!\n# Credits: Shannon Chan #"
+					print
+					break
+			else: 
+				pass
 
-		if is_win(board):
-			break
-		Pturn(2,board)
-		if is_win(board):
-			print "---- GAME OVER ----"
-			print "   Player 2 wins!  "
-			if replay(board):
-				print "Thanks for playing!\n# Credits: Shannon Chan #"
-				print
+			if is_win(board):
 				break
-		else: 
-			pass
 
-		i += 1
-		if i == 21:
-			print "---- GAME OVER ----"
-			print "    It's a draw!   "
-			if replay(board):
-				print "Thanks for playing!\n# Credits: Shannon Chan #"
-				print
+			AIturn(2,board)
+			if is_win(board):
+				print "---- GAME OVER ----"
+				print "   Computer wins!  "
+				if replay(board):
+					print "Thanks for playing!\n# Credits: Shannon Chan #"
+					print
+					break
+			else: 
+				pass
+
+			i += 1
+			if i == 21:
+				print "---- GAME OVER ----"
+				print "    It's a draw!   "
+				if replay(board):
+					print "Thanks for playing!\n# Credits: Shannon Chan #"
+					print
+					break
+
+	if who_first == "n":
+		while i<21:
+			if is_win(board):
 				break
+			
+			AIturn(1,board)
+			if is_win(board):
+				print "---- GAME OVER ----"
+				print "   Computer wins!  "
+				if replay(board):
+					print "Thanks for playing!\n# Credits: Shannon Chan #"
+					print
+					break
+			else: 
+				pass
+
+			if is_win(board):
+				break
+
+			Pturn(2,board)
+			if is_win(board):
+				print "---- GAME OVER ----"
+				print "   You win!  "
+				if replay(board):
+					print "Thanks for playing!\n# Credits: Shannon Chan #"
+					print
+					break
+			else: 
+				pass
+
+			i += 1
+			if i == 21:
+				print "---- GAME OVER ----"
+				print "    It's a draw!   "
+				if replay(board):
+					print "Thanks for playing!\n# Credits: Shannon Chan #"
+					print
+					break
 				
 
 start_game(board)

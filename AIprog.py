@@ -2,12 +2,11 @@ import scoresys
 import copy
 
 r1 = [0,0,0,0,0,0,0]
-r2 = [0,0,0,0,1,0,0]
-r3 = [1,1,0,0,0,2,0]
-r4 = [1,2,1,1,2,1,2]
-r5 = [2,2,1,1,1,2,2]
-r6 = [2,1,2,1,1,1,2]
-
+r2 = [0,0,0,0,0,0,0]
+r3 = [0,0,0,0,0,0,0]
+r4 = [0,0,0,0,0,0,0]
+r5 = [0,0,0,0,0,0,0]
+r6 = [1,0,0,0,0,0,0]
 board = [r1,r2,r3,r4,r5,r6]
 
 # BOARD-to-ARRAY transformation
@@ -283,17 +282,21 @@ def AIprog(playerx,board):
 				break
 		else: pass
 		table.append([colindex+1,allscore(playerx,board2)])
-	
+	print table
+
 	scores = []
 	for i in range(len(table)):
 		scores.append(table[i][1])
 	topscore = max(scores)
+	print scores
+	print topscore
 
 	best_col = 0
 	for i in range(len(table)):
 		if table[i][1]==topscore:
 			best_col += int(table[i][0])
+			break
 	return best_col
 
-
+print AIprog(2,board)
 
