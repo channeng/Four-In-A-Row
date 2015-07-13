@@ -2,11 +2,11 @@ import scoresys
 import copy
 
 r1 = [0,0,0,0,0,0,0]
-r2 = [0,0,0,0,2,0,0]
-r3 = [0,0,0,2,1,0,0]
-r4 = [0,0,2,1,1,1,0]
-r5 = [0,1,2,2,1,2,0]
-r6 = [0,1,2,1,2,1,0]
+r2 = [0,0,0,0,1,0,0]
+r3 = [1,1,0,0,0,2,0]
+r4 = [1,2,1,1,2,1,2]
+r5 = [2,2,1,1,1,2,2]
+r6 = [2,1,2,1,1,1,2]
 
 board = [r1,r2,r3,r4,r5,r6]
 
@@ -57,30 +57,15 @@ def rowboard(playerx,board):
 
 	return get_board_result(playerx,rowboard)
 
-
-def easyscore(playerx,board,rowindex):
-	board2 = rowboard(playerx,board)
-	row_score = []
-
-	base_score = [0]
-	for i in scoresys.scoreboard[0]:
-		if i[0] in board2[rowindex]:
-			base_score.append(i[1])
-	row_score.append(max(base_score))
-
-	extra_1_space_score = [0]
-	for i in scoresys.scoreboard[1]:
-		if i[0] in board2[rowindex]:
-			extra_1_space_score.append(i[1])
-	row_score.append(max(extra_1_space_score))
-
-	extra_2_space_score = [0]
-	for i in scoresys.scoreboard[2]:
-		if i[0] in board2[rowindex]:
-			extra_2_space_score.append(i[1])
-	row_score.append(max(extra_2_space_score))
-
-	return sum(row_score)
+def colboard(playerx,board):
+	colboard = read_board(playerx,board)
+	column = []
+	for colindex in range(len(board[0])):
+		result = []
+		for rowindex in range(len(board)):
+			result.append(colboard[rowindex][colindex])
+		column.append(get_array_result(result))
+	return column
 
 def get_diag(board,diag_type,row_col,diagindex):   # DIAG_TYPE: LEFT=0 , RIGHT=1 |  ROW_COL: ROW=0,COL=1
 	diag = []
@@ -166,16 +151,124 @@ def diagboard(playerx,board,diag_type):
 
 	return get_board_result(playerx,leftboard)
 
+def print_results(playerx,board):
+	print "COLBOARD"
+	for i in colboard(playerx,board):
+		print i
+	print
+	print
 
-	# for rowindex in range(4):
-	# 	for i in range(len(board[rowindex])):
-	# 		if board[rowindex][i] == 0 and board[rowindex+1][i] == 0:
-	# 			if board[rowindex][i] == 0 and board[rowindex+1][i] ==0 and board[rowindex+2][i] == 0:
-	# 				rowboard[rowindex][i] = "X"
-	# 			else: 
-	# 				rowboard[rowindex][i] = "P"
-	# 		else: pass
+	print "ROWBOARD"
+	for i in rowboard(playerx,board):
+		print i
+	print
+	print
 
-for i in diagboard(1,board,0):
-	print i
+	print "LEFT DIAGBOARD"
+	for i in diagboard(playerx,board,0):
+		print i
+	print
+	print
+
+	print "RIGHT DIAGBOARD"
+	for i in diagboard(playerx,board,1):
+		print i
+	print
+	print
+
+# SCORING
+
+def easyscore(playerx,board,index,row_col):   # col : row_col = 1, row : row_col = 0
+	board2 = []
+
+	if row_col == 0:
+		board2 = rowboard(playerx,board)
+	elif row_col == 1:
+		board2 = colboard(playerx,board)
+
+	row_score = []
+
+	base_score = [0]
+	for i in scoresys.scoreboard[0]:
+		if i[0] in board2[index]:
+			base_score.append(i[1])
+	row_score.append(max(base_score))
+
+	extra_1_space_score = [0]
+	for i in scoresys.scoreboard[1]:
+		if i[0] in board2[index]:
+			extra_1_space_score.append(i[1])
+	row_score.append(max(extra_1_space_score))
+
+	extra_2_space_score = [0]
+	for i in scoresys.scoreboard[2]:
+		if i[0] in board2[index]:
+			extra_2_space_score.append(i[1])
+	row_score.append(max(extra_2_space_score))
+
+	return sum(row_score)
+
+def countXs(x,result):    # Eg. Result  = rowboard(1,board)[i] or scoresys.score4char[i]
+	before = len(result)
+	result2 = []
+	for i in range(before):
+		if result[i] == str(x):
+			pass
+		else: 
+			result2.append(result[i])
+	after = len(result2)
+	return before - after
+
+def pscore(board_result,rowindex):
+	pscore = []
+	for scorechar in scoresys.scoreboard:
+		charscore = []
+		for i in range(len(scorechar)):
+			score = 0
+			if scorechar[i][0] in board_result[rowindex]:
+				score = scorechar[i][1]
+			else:
+				replaced = board_result[rowindex].replace("P","0")
+				countPs = countXs("P",board_result[rowindex])
+				count0s = countXs("0",scorechar[i][0])
+				if scorechar[i][0] in replaced and countPs <= count0s:
+					score = scorechar[i][1]/(countPs+1.00)
+				else: score =0
+			charscore.append(score)
+		pscore.append(max(charscore))
+	return sum(pscore)
+
+def colscore(playerx,board):
+	colscore = 0
+	for i in range(len(colboard(playerx,board))):
+		colscore += easyscore(playerx,board,i,1)
+	return colscore
+
+def rowscore(playerx,board):
+	board_result = rowboard(playerx,board)
+	rowscore = easyscore(playerx,board,5,0)    # easy score for r6 of board
+	for i in range(len(board_result)-1):    #pscore for rows 1 - 5
+		rowscore += pscore(board_result,i)
+	return rowscore
+
+def leftdiagscore(playerx,board):
+	board_result = diagboard(playerx,board,0)
+	rowscore = 0    # easy score for r6 of board
+	for i in range(len(board_result)):    #pscore for rows 1 - 5
+		rowscore += pscore(board_result,i)
+	return rowscore
+
+def rightdiagscore(playerx,board):
+	board_result = diagboard(playerx,board,1)
+	rowscore = 0    # easy score for r6 of board
+	for i in range(len(board_result)):    #pscore for rows 1 - 5
+		rowscore += pscore(board_result,i)
+	return rowscore
+
+def allscore(playerx,board):
+	allscore =[colscore(playerx,board),rowscore(playerx,board),leftdiagscore(playerx,board),rightdiagscore(playerx,board)]
+	return sum(allscore)
+
+print allscore(1,board)
+
 
