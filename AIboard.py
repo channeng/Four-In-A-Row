@@ -1,6 +1,7 @@
 import copy
 import time
 import AIprog
+import printcredits
 
 colHeaders = [1,2,3,4,5,6,7]
 r0 = ["-","-","-","-","-","-","-"]
@@ -13,8 +14,8 @@ r5 = [0,0,0,0,0,0,0]
 r6 = [0,0,0,0,0,0,0]
 board = [r1,r2,r3,r4,r5,r6]
 
-
-
+def color(this_color, string):
+    return "\033[" + this_color + "m" + string + "\033[0m"
 
 def printboard(board):
 	for i in range(50):
@@ -22,7 +23,13 @@ def printboard(board):
 	for r in board:
 		print "|",
 		for i in r:
-			print i,
+			if i == 0:
+				print " ",
+			elif i == 1:
+				print color("1;34","O"),
+			elif i == 2:
+				print color("1;31","X"),
+			else: print i,
 		print "|"
 	print "-",
 	for r in r0:
@@ -48,6 +55,36 @@ def animateBoard(playerx,board,pcol):
 			print
 			time.sleep(0.12)
 		else: break
+
+def animate_clearBoard(board):
+	board2 = copy.deepcopy(board)
+	for rowindex in range(len(board)):
+		if rowindex == 0: pass
+		else: board2[rowindex-1] = [0,0,0,0,0,0,0]
+		board2[rowindex] = ["#","#","#","#","#","#","#"]
+		printboard(board2)
+		print
+		print
+		time.sleep(0.2)
+
+def animate_startBoard(board):
+	board2 = copy.deepcopy(board)
+	for rowindex in range(len(board)):
+		if rowindex == 0: pass
+		else: board2[rowindex-1] = [0,0,0,0,0,0,0]
+		board2[rowindex] = [0,"R","E","A","D","Y",0]
+		printboard(board2)
+		print
+		print
+		time.sleep(0.15)
+	for rowindex in range(len(board)):
+		if rowindex == 0: pass
+		else: board2[rowindex-1] = [0,0,0,0,0,0,0]
+		board2[rowindex] = [0,"S","T","A","R","T",0]
+		printboard(board2)
+		print
+		print
+		time.sleep(0.15)
 
 #INTERACTIVE elements
 
@@ -80,7 +117,8 @@ def fillBoard(playerx,board):
 		fillBoard(playerx,board)
 
 def AIfillBoard(playerx,board):
-	time.sleep(1.22)
+	print
+	time.sleep(1.2)
 	AIcol = AIprog.AIprog_offdef(playerx,board)
 	print "Computer chooses column %s !" %(AIcol)
 	pcol = AIcol-1
@@ -259,7 +297,7 @@ def Pturn(playerx, board):
 	printboard(board)
 
 def AIturn(playerx, board):
-	print "Computer's turn"
+	print "Computer's turn ..."
 	AIfillBoard(playerx,board)
 	printboard(board)
 
@@ -267,6 +305,7 @@ def replay(board):
 	inputt = str(raw_input("Do you want to play again? (y/n) \n > ")).lower()
 	answer = checkyn(inputt)
 	if answer == "y":
+		animate_clearBoard(board)
 		start_game(clearboard(board))
 	else:
 		print 
@@ -274,10 +313,11 @@ def replay(board):
 
 def start_game(board):
 	printboard(board)
+	who_first = checkyn(raw_input("Would you like to begin first? (y/n)\n\n> "))
 	i = 0
-	who_first = checkyn(raw_input("Would you like to begin first? (y/n)"))
-	
+	animate_startBoard(board)
 	if who_first == "y":
+		printboard(board)
 		while i<21:
 			if is_win(board):
 				break
@@ -287,7 +327,7 @@ def start_game(board):
 				print "---- GAME OVER ----"
 				print "   You win!  "
 				if replay(board):
-					print "Thanks for playing!\n# Credits: Shannon Chan #"
+					printcredits.credits()
 					print
 					break
 			else: 
@@ -301,7 +341,7 @@ def start_game(board):
 				print "---- GAME OVER ----"
 				print "   Computer wins!  "
 				if replay(board):
-					print "Thanks for playing!\n# Credits: Shannon Chan #"
+					printcredits.credits()
 					print
 					break
 			else: 
@@ -312,11 +352,12 @@ def start_game(board):
 				print "---- GAME OVER ----"
 				print "    It's a draw!   "
 				if replay(board):
-					print "Thanks for playing!\n# Credits: Shannon Chan #"
+					printcredits.credits()
 					print
 					break
 
 	if who_first == "n":
+		printboard(board)
 		while i<21:
 			if is_win(board):
 				break
@@ -326,7 +367,7 @@ def start_game(board):
 				print "---- GAME OVER ----"
 				print "   Computer wins!  "
 				if replay(board):
-					print "Thanks for playing!\n# Credits: Shannon Chan #"
+					printcredits.credits()
 					print
 					break
 			else: 
@@ -340,7 +381,7 @@ def start_game(board):
 				print "---- GAME OVER ----"
 				print "   You win!  "
 				if replay(board):
-					print "Thanks for playing!\n# Credits: Shannon Chan #"
+					printcredits.credits()
 					print
 					break
 			else: 
@@ -351,9 +392,8 @@ def start_game(board):
 				print "---- GAME OVER ----"
 				print "    It's a draw!   "
 				if replay(board):
-					print "Thanks for playing!\n# Credits: Shannon Chan #"
+					printcredits.credits()
 					print
 					break
 				
-
 start_game(board)
