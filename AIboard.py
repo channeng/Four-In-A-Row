@@ -118,10 +118,27 @@ def fillBoard(playerx,board):
 
 def AIfillBoard(playerx,board):
 	print
-	time.sleep(1.2)
+	time.sleep(0)
 	AIcol = AIprog.AIprog_offdef(playerx,board)
 	print "Computer chooses column %s !" %(AIcol)
 	pcol = AIcol-1
+	animateBoard(playerx,board,pcol)
+	for r in reversed(board):
+		if r[pcol] == 0:
+			r[pcol] = playerx
+			break
+	else: pass
+
+def AIendfillBoard(playerx,board):
+	print
+	time.sleep(1.2)
+	AIcol = ""
+	for colindex in board[0]:
+		if board[0][colindex] == 0:
+			AIcol = colindex
+			break
+	print "Computer chooses column %s !" %(int(AIcol)+1)
+	pcol = int(AIcol)
 	animateBoard(playerx,board,pcol)
 	for r in reversed(board):
 		if r[pcol] == 0:
@@ -301,6 +318,11 @@ def AIturn(playerx, board):
 	AIfillBoard(playerx,board)
 	printboard(board)
 
+def AIendturn(playerx, board):
+	print "Computer's turn ..."
+	AIendfillBoard(playerx,board)
+	printboard(board)
+
 def replay(board):
 	inputt = str(raw_input("Do you want to play again? (y/n) \n > ")).lower()
 	answer = checkyn(inputt)
@@ -336,7 +358,11 @@ def start_game(board):
 			if is_win(board):
 				break
 
-			AIturn(2,board)
+			if i ==20:
+				AIendturn(2,board)
+			else:
+				AIturn(2,board)
+
 			if is_win(board):
 				print "---- GAME OVER ----"
 				print "   Computer wins!  "
